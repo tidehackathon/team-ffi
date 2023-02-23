@@ -44,20 +44,32 @@ A pre-trained NLI (natural language inference) models as a ready-made zero-shot 
 bart-large-mnli: https://huggingface.co/facebook/bart-large-mnli
 
 ### The SimCSE Relevancy Classifier
+This classifier uses [SimCSE](https://github.com/princeton-nlp/SimCSE) to create 1024-dimensional embedding vectors from all provided tweets.
+It then uses [principle component anlysis (PCA)](https://en.wikipedia.org/wiki/Principal_component_analysis) to reduce the embeddings to 2 dimensions. We could then analyse the embeddings visually on a 2D plot and identified somewhat of a separation of two «clusters», one of which contained a lot of messages with the hashtag #StandWithUkraine.
+We hand-crafted a linear classifier trying to separate these, resulting in the final classifier.
+This classifier recognizes messages that are relevant to the Russian invasion of Ukraine.
 
 
-### The Disinformation Classifier
-This is a finetuned LLM (roberta-base) designed to classify misinformation. The misinformation data was gathered from
+### The Disinformation Classifiers
+The first disinformation classifier is a finetuned LLM (roberta-base) designed to classify misinformation. The misinformation data was gathered from
 the twitter dataset by using a pretrained zero-shot natural language inference (bart-large-mnli) to find tweets that contain known disinformation
 narratives about the Russian invasion of Ukraine. The suggestions from the zero-shot model was manually verified before they were added to the dataset.
 
 roberta-base: https://huggingface.co/roberta-base
 
+The second disinformation classifier is a logistic regression classifier trained on the SimCSE embeddings of a small manually labeled dataset of tweets.
+
 ### The Bot Detector
+The bot detector is relatively simple.
+It detects whether the account posting a given tweet is new, or if it has few followers.
+The result is the average of 0.95^(#followers + 1) and 0.95^(accountAgeInDays + 1).
 
 ### The Total Score
+Even though we think it is important to consider the scores of the different models, we aggregate the result into a single score.
+This score is simply a weighted average of the scores of each model.
+This could be developed further by manual tweaking, or by training another classifier, effectively training an ensemble model.
 
-![](media/DisinformationAnalyzerDiagram_draft.png)
+![](media/DisinformationAnalyzerDiagram2.png)
 
 ## Data
 
@@ -79,9 +91,9 @@ Pseudo labelling of the data was done in a few diffrent ways.
 
 
 **Semantic likeness to known propaganda**
-We used semantic likeness to known propaganda talking points, to create a misinformation/non misinformation label, using our *Zero-Shot Narrative Recognition* model. Read more about our models in the [README](../)
+We used semantic likeness to known propaganda talking points, to create a misinformation/non misinformation label, using our *Zero-Shot Narrative Recognition* model. Read more about our models above.
 
-For a small subset, we manually verified 50 instances of misinformation in the dataset and made a dataset containing those 50 samples
+For a small subset, we manually verified 100 instances of misinformation in the dataset and made a dataset containing those 100 samples
 as well as 100 random samples that could be used as and a tiny training dataset.
 
 We repeated the process to create a small test and demo dataset, so that we could ensure to have **train-test-split** for more reliable verification of our results.
