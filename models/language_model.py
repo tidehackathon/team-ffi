@@ -12,7 +12,7 @@ class TextEmbedder:
     def __init__(self) -> None:
         self.device = get_free_gpu()
         self.tokenizer = AutoTokenizer.from_pretrained("princeton-nlp/sup-simcse-roberta-large")
-        self.model = AutoModel.from_pretrained("princeton-nlp/sup-simcse-roberta-large",cache_dir="/data/tide-hackaton/cache/huggingface")
+        self.model = AutoModel.from_pretrained("princeton-nlp/sup-simcse-roberta-large")  #,cache_dir="/data/tide-hackaton/cache/huggingface")
         self.model.to(self.device)
 
     def embed(self, texts: list[str], batch_size=50) -> torch.Tensor:

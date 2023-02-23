@@ -19,7 +19,7 @@ class RobertaClassifier(Classifier, torch.nn.Module):
     def __init__(self, config={}):
         super().__init__(config)
 
-        self.base_model = AutoModel.from_pretrained("roberta-base", self.huggingface_cache)
+        self.base_model = AutoModel.from_pretrained("roberta-base")  #, self.huggingface_cache)
         self.tokenizer = AutoTokenizer.from_pretrained("roberta-base")  # TODO: huggingface_cache?
         num_classes = 2
         model_final_layer_dim = 768

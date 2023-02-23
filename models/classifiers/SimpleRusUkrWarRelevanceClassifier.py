@@ -3,14 +3,13 @@ import pickle
 import sys
 
 import numpy as np
-import torch
 
 if __name__ == "__main__":
     sys.path.append(".")
 from models.classifiers import Classifier
 from models.language_model import TextEmbedder
 
-class SimpleUkraineSupportClassifier(Classifier):
+class SimpleRusUkrWarRelevanceClassifier(Classifier):
     """
     This is a hand-crafted linear classifier created by doing 2-dimensionalpricipal component analysis (PCA)
     of SimCSE embeddings of tweets with their hashtags removed and identifying that
@@ -28,7 +27,7 @@ class SimpleUkraineSupportClassifier(Classifier):
 
 
     @classmethod
-    def from_pretrained(cls, model_id: str | None) -> SimpleUkraineSupportClassifier:
+    def from_pretrained(cls, model_id: str | None) -> SimpleRusUkrWarRelevanceClassifier:
         available_ids = ("handcrafted")
         assert model_id is None or model_id in available_ids
         return cls()
@@ -39,7 +38,7 @@ class SimpleUkraineSupportClassifier(Classifier):
     def _linear_clf(self, embeddings_pca):
         border_a = 1.6
         border_b = -0.27
-        sigmoid_factor = 2
+        sigmoid_factor = 4
 
         distance_from_line = (border_a*embeddings_pca[:, 0] - embeddings_pca[:, 1] + border_b) / (border_a**2 + 1)**0.5
         # scores = distance_from_line
@@ -74,13 +73,13 @@ class SimpleUkraineSupportClassifier(Classifier):
     def get_class_names(self) -> list[str]:
         """Get a list of the class names."""
 
-        return ["Ukraine supportive", "Not Ukraine supportive", ]
+        return ["Rus/Ukr war relevant", "Not Rus/Ukr relevant", ]
 
 
 def test():
     print("Testing …")
 
-    clf = SimpleUkraineSupportClassifier()
+    clf = SimpleRusUkrWarRelevanceClassifier()
     strings = [
         "An exceedingly, almost impossibly long string.",
         "Roses are red, violets are blue, some things are false, others are true.",

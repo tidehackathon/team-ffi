@@ -5,7 +5,7 @@ import numpy as np
 class Classifier(ABC):
     def __init__(self, config: dict = {}):
         self.config_dict = config
-        self.huggingface_cache = "/data/tide-hackaton/cache/huggingface"
+        # self.huggingface_cache = "/data/tide-hackaton/cache/huggingface"
 
     @classmethod
     # @abstractmethod
