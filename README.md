@@ -62,7 +62,7 @@ The second disinformation classifier is a logistic regression classifier trained
 ### The Bot Detector
 The bot detector is relatively simple.
 It detects whether the account posting a given tweet is new, or if it has few followers.
-The result is the average of 0.95^(#followers + 1) and 0.95^(accountAgeInDays + 1).
+The result is the average of $0.95^{\#\text{followers} + 1}$ and $0.95^{\text{accountAgeInDays} + 1}$.
 
 ### The Total Score
 Even though we think it is important to consider the scores of the different models, we aggregate the result into a single score.
@@ -79,7 +79,7 @@ Our dataset and labels can be found on Azure: [LINK]
 
 ### Dataset modification
 
-- Concatinated all twitter datasets
+- Concatenated all twitter datasets
 - Removed duplicates
 - Added a column of hashtag free text
 - Extracted user information on a more readable format and added a column to dataframe for each data point
@@ -87,14 +87,14 @@ Our dataset and labels can be found on Azure: [LINK]
 
 ### Labelling protocol
 
-Pseudo labelling of the data was done in a few diffrent ways.
+Pseudo labelling of the data was done in a few different ways.
 
 
 **Semantic likeness to known propaganda**
 We used semantic likeness to known propaganda talking points, to create a misinformation/non misinformation label, using our *Zero-Shot Narrative Recognition* model. Read more about our models above.
 
 For a small subset, we manually verified 100 instances of misinformation in the dataset and made a dataset containing those 100 samples
-as well as 100 random samples that could be used as and a tiny training dataset.
+as well as 100 random samples that could be used as a tiny training dataset.
 
 We repeated the process to create a small test and demo dataset, so that we could ensure to have **train-test-split** for more reliable verification of our results.
 
@@ -102,7 +102,10 @@ The indexes of the verified misinformation entries are stored as .txt files and 
 
 **PCA**
 We also did [principle component anlysis](https://en.wikipedia.org/wiki/Principal_component_analysis) on data to divide it into binary classes. Tweets with a pro Ukranian sentiment seemed to cluster, as illustrated below, where tweets marked with the #StandWithUkraine hashtags is coded in orange.
+We tried t-SNE as well, but this did not seem very fruitful.
 
 ![](../media/SimCSE-embeddings_pca.png)
 
-## Sample Results
+**Hashtags**
+Finally, we wanted to use hashtags to create pseudo-labels. We identified #StandWithUkraine as a good proxy for identifying Ukraine-supporting tweets.
+However, we were unable to find good, universal hashtags for the opposing view.

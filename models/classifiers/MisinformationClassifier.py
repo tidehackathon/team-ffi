@@ -50,7 +50,7 @@ class MisinformationClassifier(Classifier):
         base_model = AutoModel.from_pretrained("roberta-base")
         self.model = BinaryClassifier(base_model,model_dim,classes)
 
-        self.model.load_state_dict(torch.load("/filserver/tide-hackaton/datasets/Disinformation-challenge-data/twitter/misinf_statedict.pt"))
+        self.model.load_state_dict(torch.load("/filserver/tide-hackaton/models/misinf_statedict.pt"))
         self.model.to(self.device)
         self.model.eval()
 
