@@ -15,12 +15,14 @@ One of the core components of out solution is the ability to recognice known pro
 In addition to the Narrative Recognizer, we have created *Russia/Ukraine War Relevancy*- classifier that uses [SimCSE](https://github.com/princeton-nlp/SimCSE) as a backbone and trained the [data](/data) using pseudo-labels that we created using principle component analysis and hashtags.
 
 ### General disinformation classifier
-We also built *Misinformation Classifier* that uses a [RoBERTA](https://huggingface.co/roberta-base)-backbone and finetuned in on the data using the Narrative Recognizer and manual verification to create labels.
+We also built two *Misinformation Classifiers* trained on our hand-annotated data.
+
+The first uses a [RoBERTA](https://huggingface.co/roberta-base)-backbone and finetuned in on the data using the Narrative Recognizer and manual verification to create labels.
+
+The second uses a [SimCSE](https://huggingface.co/princeton-nlp/sup-simcse-roberta-large) backbone to create embeddings of the texts and a linear logistic classifier using these embeddings to recognize misinformation.
 
 ### Flagging potential bot Twitter accounts
 Some disinformation on Twitter is posted by bot accounts. To recognize these messages, we have created a simple bot detector. To flag potential bot posts, it uses the age of the account at the time of posting, as well as the account's number of followers, working on the assumption that bots are more likely to be new accounts and have few followers.
-
-[EN TIL MODELL HER??]
 
 *All the code for our models are placed in [models](models), and a more in depth info about them can be found below.*
 
@@ -43,8 +45,9 @@ bart-large-mnli: https://huggingface.co/facebook/bart-large-mnli
 
 ### The SimCSE Relevancy Classifier
 
+
 ### The Disinformation Classifier
-This is a finetuned LLM (roberta-base) designed to classify misinformation. The misinformation data was gathered from 
+This is a finetuned LLM (roberta-base) designed to classify misinformation. The misinformation data was gathered from
 the twitter dataset by using a pretrained zero-shot natural language inference (bart-large-mnli) to find tweets that contain known disinformation
 narratives about the Russian invasion of Ukraine. The suggestions from the zero-shot model was manually verified before they were added to the dataset.
 
@@ -54,7 +57,7 @@ roberta-base: https://huggingface.co/roberta-base
 
 ### The Total Score
 
-[Bilde av arkitektur her!]
+![](media/DisinformationAnalyzerDiagram_draft.png)
 
 ## Data
 
@@ -78,7 +81,7 @@ Pseudo labelling of the data was done in a few diffrent ways.
 **Semantic likeness to known propaganda**
 We used semantic likeness to known propaganda talking points, to create a misinformation/non misinformation label, using our *Zero-Shot Narrative Recognition* model. Read more about our models in the [README](../)
 
-For a small subset, we manually verified 50 instances of misinformation in the dataset and made a dataset containing those 50 samples 
+For a small subset, we manually verified 50 instances of misinformation in the dataset and made a dataset containing those 50 samples
 as well as 100 random samples that could be used as and a tiny training dataset.
 
 We repeated the process to create a small test and demo dataset, so that we could ensure to have **train-test-split** for more reliable verification of our results.

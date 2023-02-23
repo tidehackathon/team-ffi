@@ -116,7 +116,8 @@ def run(config:list[str]):
          total_score_dict[model_name] = out
       elif model_name == "botDetector":
          if st.session_state.mode == "single":
-            total_score_dict[model_name] = 0.5  
+            #total_score_dict[model_name] = 0.5
+            pass
          else:
             out = model.predict(file["date"].iloc[st.session_state.i],file["user"].iloc[st.session_state.i])[0]
             updatePlot(out,model_metrics[model_name])
@@ -160,8 +161,6 @@ def updateNarrativePlot(narrative_analysis,labels):
    fig2.add_trace(go.Bar(x=narrative_analysis, y=labels,orientation='h',marker_color=primary))
    fig2.update_xaxes(range=[0,1])
 
-def updateDisinfo():
-   st.session_state.disinfo = disinfo
 
 def restMultiple():
    st.session_state.i = 0
@@ -207,13 +206,14 @@ with tab_settings:
 
    st.write("**Propaganda recognizer semantic input**")
 
-   disinfo = st.text_area("Known disinformation",
+   st.session_state.disinfo = st.text_area("Known disinformation",
    value=st.session_state.disinfo,height=200,help="Enter information to be run against inputs with semantic AI analysis. Separate each input with a semi colon (;)")
+
 
    col1,col2,col3 = st.columns(3)
 
    with col2:
-      st.button("Update",use_container_width=True,on_click=updateDisinfo)
+      st.button("Update",use_container_width=True)
 
 # Main page for the analyzer
 with tab_analyze:
